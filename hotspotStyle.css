@@ -1,0 +1,216 @@
+* {
+    font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, San-serif;
+}
+div#hotSpotHolder {
+    background: #39aba3;
+    border-radius: 10px;
+    padding: 15px 15px 25px;
+    z-index: 99999999;
+}
+div#clearWrapper {
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    background: transparent;
+}
+.relative {
+    position: relative;
+}
+.center {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+div#hotSpotContent {
+    color: white;
+    padding-bottom: 20px;
+}
+div#hotSpotTitle {
+    color: white;
+    width: 100%;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    font-size: 24px;
+}
+button#rightHotspot {
+    margin-left: 10%;
+    background: #fcb809;
+    min-width: 39%;
+    min-height: 30px;
+    border-radius: 15px;
+    border: 0;
+}
+button#rightHotspot:hover {
+    cursor: pointer;
+    color: white;
+    border: solid white 2px;
+}
+button#leftHotspot {
+    margin-left: 8%;
+    background: #39aba3;
+    width: 39%;
+    min-height: 30px;
+    border-radius: 15px;
+    color: white;
+    border: solid 2px;
+}
+button#leftHotspot:hover {
+    color: #39aba3;
+    background: white;
+    cursor: pointer;
+}
+span#hotspotNub {
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: inset 14px;
+    border-color: #39aba3;
+    border-bottom-color: transparent;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+}
+@supports (-webkit-appearance: none) {
+    .top {
+        border-bottom-color: #39aba3 !important;
+        top: -27px;
+    }
+    .bottom {
+        border-top-color: rgb(43, 255, 240) !important;
+        bottom: -27px;
+    }
+    .right {
+        border-left-color: rgb(43, 255, 240) !important;
+        right: -27px;
+    }
+    .left {
+        border-right-color: #39aba3 !important;
+        left: -27px;
+    }
+}
+_:-moz-tree-row(hover),
+.top {
+    border-bottom-color: #39aba3 !important;
+    top: -27px;
+}
+_:-moz-tree-row(hover),
+.bottom {
+    border-top-color: #39aba3 !important;
+    bottom: -27px;
+}
+_:-moz-tree-row(hover),
+.right {
+    border-left-color: #39aba3 !important;
+    right: -27px;
+}
+_:-moz-tree-row(hover),
+.left {
+    border-right-color: #39aba3 !important;
+    left: -27px;
+}
+.top {
+    border-bottom-color: #39aba3 !important;
+    top: -27px;
+}
+.bottom {
+    border-top-color: rgb(43, 255, 240) !important;
+    bottom: -27px;
+}
+.right {
+    border-left-color: rgb(43, 255, 240) !important;
+    right: -27px;
+}
+.left {
+    border-right-color: #39aba3 !important;
+    left: -27px;
+}
+div#screenWrapper {
+    z-index: 99;
+    background: rgba(255, 255, 255, 0.80);
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+button#closeHotspot {
+    position: absolute;
+    top: 7px;
+    right: 20px;
+    background: #39aba3;
+    border: 0;
+    font-size: 25px;
+    color: white;
+}
+button#closeHotspot:hover {
+    cursor: pointer;
+    color: #d6d6d6;
+}
+div#dotMenu {
+    width: 80%;
+    left: 10%;
+    position: relative;
+    text-align: center;
+    bottom: -25px;
+    padding-bottom: 25px;
+}
+#dotMenu ul {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    cursor: default;
+}
+#dotMenu li {
+    position: relative;
+    display: block;
+    float: left;
+    margin: 0 5px;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    color: white;
+    background-color: white;
+    border-radius: 10px;
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px white;
+}
+li.current {
+    background-color: white !important;
+}
+
+[type="radio"] {
+  border: 0; 
+  clip: rect(0 0 0 0); 
+  height: 1px; 
+  margin: -1px; 
+  overflow: hidden; 
+  padding: 0; 
+  position: absolute; 
+  width: 1px;
+}
+
+[type="radio"] + span::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: -0.25em;
+  border-radius: 1em;
+  border: 0.125em solid #fff;
+  margin-right: 0.75em;
+  transition: 0.2s ease all;
+}
+[type="radio"]:checked + span::before {
+  background: white;
+}
+
+/* One radio button per line */
+label {
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 17px;
+}

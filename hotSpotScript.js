@@ -6,111 +6,61 @@
  * @author Kyle Johnson <kyle.johnson@myfela.com>
  * 
  */
-
- /**
+/**
  * When making a question use a <label><input><span></span></label> set up.
  * EX.
  * <label for='yes'><input type='radio' value='yes' name='question' id='yes'><span>YES</span></label>
  */
- 
 /** The array of objects that are used to customize each individual hotspot. Consists of all strings.
  * @var {string} title the title of each hotspot
  * @var {string} content This is the content shown.
  * @var {string} rightButton The button shown on the right of the hotspot (mostly used for "next")
  * @var {string} leftButton The button shown on the left of the hotspot ("previous" or "close")
  * @var {string} size
- * @var {string} size.height The height of a hotspot
- * @var {string} size.width The width of a hotspot
+ * @var {string} size.height The height of a hotspot, if left blank will generate an height of 100px
+ * @var {string} size.width The width of a hotspot if left blank will generate a width of 500px
  * @var {string} position The position of the hotspot whether Centered or Relative to an id.
  * @var {string} id If "relative" position this determines which id to position the hotspot near.
  * @var {string} location Determines if it is position to the "right", "left", "bottom", or "top" of the id element.
  * @var {string} background If 'none' is passed in then it removes the faded background effect.
+ * @var {string} type Pass in 'question' to be able to handle what happenes when the rightHotspot is clicked.
+ * @var {string} questionId Pass in a number to distinguish between what event handler you want to use.
  */
 var options = [{
-	"title": "Welcome!",
-	"content": "This is your <u>second</u> tutorial!",
-	"rightButton": "Next",
-	"leftButton": "I'M GOOD ",
-	"size": {
-		"height": "200px",
-		"width": "500px"
-	},
-	"position": "relative",
-	"id": "test",
-	"location": "bottom-right"
+    "title": "Welcome!",
+    "content": "This is your <u>first</u> tutorial!",
+    "rightButton": "Next",
+    "leftButton": "I'M GOOD",
+    "size": {
+        "height": "200px",
+        "width": "500px"
+    },
+    "position": "center",
+    "id": "none",
+    "location": "left-bottom"
 }, {
-	"title": "Welcome!",
-	"content": "This is your <u><b>third</b></u> tutorial!<br><br> This demostrates a break.",
-	"rightButton": "Next",
-	"leftButton": "I'M GOOD ",
-	"size": {
-		"height": "440px",
-		"width": "200px"
-	},
-	"position": "relative",
-	"id": "test2",
-	"location": "left-top"
+    "title": "Welcome!",
+    "content": "This is your <u><b>second</b></u> tutorial!<br><br> This demostrates a break.",
+    "rightButton": "Next",
+    "leftButton": "I'M GOOD",
+    "size": {
+        "height": "auto",
+        "width": "200px"
+    },
+    "position": "relative",
+    "id": "test",
+    "location": "right-bottom"
 }, {
-	"title": "Welcome!",
-	"content": "This is your <u><b>fifth</b></u> tutorial!<br><br> This demostrates a break.",
-	"rightButton": "Next",
-	"leftButton": "I'M GOOD ",
-	"size": {
-		"height": "440px",
-		"width": "200px"
-	},
-	"position": "relative",
-	"id": "test3",
-	"location": "top-left"
-}, {
-	"title": "Welcome!",
-	"content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-	"rightButton": "Next",
-	"leftButton": "I'M GOOD ",
-	"size": {
-		"height": "440px",
-		"width": "200px"
-	},
-	"position": "relative",
-	"id": "test3",
-	"location": "top-left"
-}, {
-	"title": "Welcome!",
-	"content": "Are you having a good day? <label for='yes'><input type='radio' value='yes' name='question' id='yes'><span>YES</span></label> <label for='no'><input type='radio' value='no' name='question' id='no'><span>NO</span></label>",
-	"rightButton": "Submit",
-	"leftButton": "",
-	"size": {
-		"height": "250px",
-		"width": "500px"
-	},
-	"position": "center",
-	"id": "none",
-	"background": "none"
-}];
-var options2 = [{
-	"title": "Welcome!",
-	"content": "This is your second <b>introductory</b> tutorial!",
-	"rightButton": "Next",
-	"leftButton": "I'M GOOD ",
-	"size": {
-		"height": "250px",
-		"width": "500px"
-	},
-	"position": "center",
-	"id": "none",
-	"background": "none"
-}, {
-	"title": "Welcome!",
-	"content": "This is your <u>second</u> tutorial!",
-	"rightButton": "Next",
-	"leftButton": "I'M GOOD ",
-	"size": {
-		"height": "200px",
-		"width": "500px"
-	},
-	"position": "relative",
-	"id": "test",
-	"location": "bottom-right"
+    "title": "Welcome!",
+    "content": "This is your <u><b>third</b></u> tutorial!<br><br> This demostrates a break.",
+    "rightButton": "Next",
+    "leftButton": "I'M GOOD ",
+    "size": {
+        "width": "200px"
+    },
+    "position": "relative",
+    "id": "test3",
+    "location": "top-right"
 }];
 /**
  * This function called when the tutorial has be completed.
@@ -162,7 +112,13 @@ function getHotSpotLeft(side, id) {
  * @returns {Number}
  */
 function getPositionLeft(id) {
-    return $("#" + id).position().left;
+    var path = $("#" + id).parentsUntil("body");
+    var left = 0;
+    for (var i = 0; i < path.length; i++) {
+        left = left + $(path[i]).position().left;
+    }
+    left = left + $("#" + id).position().left;
+    return left;
 }
 
 /**
@@ -171,7 +127,13 @@ function getPositionLeft(id) {
  * @returns {Number}
  */
 function getPositionTop(id) {
-    return $("#" + id).position().top;
+    var path = $("#" + id).parentsUntil("body");
+    var top = 0;
+    for (var i = 0; i < path.length; i++) {
+        top = top + $(path[i]).position().top;
+    }
+    top = top + $("#" + id).position().top;
+    return top
 }
 
 /**
@@ -210,17 +172,18 @@ function getHeight(id) {
     return $("#" + id).outerHeight(true);
 }
 
+
 function Hotspot() {
     /**
      * The function that puts together each hotspot when it is called.
      * @constructor init
      * @param {object[]} options Each specification the hotspot is made to.
      * @param {function} myCallback Function called at the completion on the tutorial.
-     * @param {number} i What step in the tutorial they are at.
+     * @param {number} startingIndex What step in the tutorial they are at.
      */
-    Hotspot.prototype.init = function(options, myCallback, i) {
-        var screenHolder, hotspotHolder, hotspotNub, closeButton, hotspotTitle, hotspotContent, leftHotspot, rightHotspot, next;
-	
+    Hotspot.prototype.init = function(options, startingIndex, myCallback) {
+        var screenHolder, hotspotHolder, hotspotNub, closeButton, hotspotTitle, hotspotContent, leftHotspot, rightHotspot, next, answer;
+
         this.options = options;
 
         next = new Hotspot();
@@ -229,11 +192,12 @@ function Hotspot() {
 
         var length = options.length;
 
-        var id = this.options[i].id;
+        var id = this.options[startingIndex].id;
 
         if ($('#' + id).length === 0 && id != "none") {
-            next.init(options, myCallback, i + 1);
-        } else { /**
+            next.init(options, startingIndex + 1, myCallback);
+        } else {
+            /**
              * The variable that creates our "cover" for the screen
              * @var {object} screenHolder
              */
@@ -259,10 +223,19 @@ function Hotspot() {
              */
             hotspotHolder = document.createElement("div");
             var $hotspotHolder = $(hotspotHolder);
-            $hotspotHolder.attr("class", this.options[i].position);
+            $hotspotHolder.attr("class", this.options[startingIndex].position);
             $hotspotHolder.attr("id", "hotspotHolder");
-            $hotspotHolder.width(this.options[i].size.width);
-            $hotspotHolder.height(this.options[i].size.height);
+            if (this.options[startingIndex].size.width === null) {
+                $hotspotHolder.width('500px');
+            } else {
+                $hotspotHolder.width(this.options[startingIndex].size.width);
+            }
+
+            if (this.options[startingIndex].size.height === null) {
+                $hotspotHolder.css('min-height', '100px');
+            } else {
+                $hotspotHolder.css('min-height', this.options[startingIndex].size.height);
+            }
             $screenHolder.append(hotspotHolder);
 
             /**
@@ -279,7 +252,7 @@ function Hotspot() {
              */
             hotspotTitle = document.createElement("div");
             $(hotspotTitle).attr("id", "hotspotTitle");
-            $(hotspotTitle).html(this.options[i].title);
+            $(hotspotTitle).html(this.options[startingIndex].title);
             $hotspotHolder.append(hotspotTitle);
 
             /**
@@ -288,27 +261,28 @@ function Hotspot() {
              */
             hotspotContent = document.createElement("div");
             $(hotspotContent).attr("id", "hotspotContent");
-            $(hotspotContent).html(this.options[i].content);
+            $(hotspotContent).html(this.options[startingIndex].content);
             $hotspotHolder.append(hotspotContent);
 
             /**
              * Creates the button shown on the right side of the hotspot.
              * @var {object} rightHotspot
              */
-            if (this.options[i].rightButton !== "") {
+            if (this.options[startingIndex].rightButton !== "") {
                 rightHotspot = document.createElement("button");
                 $(rightHotspot).attr("id", "rightHotspot");
-                $(rightHotspot).text(this.options[i].rightButton);
+                $(rightHotspot).text(this.options[startingIndex].rightButton);
                 rightHotspot.addEventListener("click", function() {
-                    if (i === length - 1) {
+                    if (startingIndex === length - 1) {
+                        answer = $('input[name=question]:checked', '#hotspot').val();
                         $screenHolder.fadeOut();
                         $screenHolder.remove();
                         myCallback();
                     } else {
-                        i = i + 1;
+                        startingIndex = startingIndex + 1;
                         $("#" + id).css("z-index", "0");
                         $screenHolder.remove();
-                        next.init(options, myCallback, i);
+                        next.init(options, startingIndex, myCallback);
                     }
                 });
             }
@@ -317,42 +291,19 @@ function Hotspot() {
              * Creates the button shown on the left side of the hotspot.
              * @var {object} leftHotspot
              */
-            if (this.options[i].leftButton === "") {
+            if (this.options[startingIndex].leftButton === "") {
                 $(rightHotspot).css("width", "80%");
             } else {
                 leftHotspot = document.createElement("button");
                 $(leftHotspot).attr("id", "leftHotspot");
-                $(leftHotspot).text(this.options[i].leftButton);
+                $(leftHotspot).text(this.options[startingIndex].leftButton);
                 $hotspotHolder.append(leftHotspot);
                 leftHotspot.addEventListener("click", function() {
                     $(screenHolder).fadeOut("slow");
                     $(screenHolder).remove();
                 });
             }
-			$hotspotHolder.append(rightHotspot);
-
-            /**
-             * Puts the "nub" in the center of the hotspot
-             */
-            var startHeight = this.options[i].size.height.replace("px", "");
-            var height = startHeight / 2 + 4;
-            var startWidth = this.options[i].size.width.replace("px", "");
-            var width = startWidth / 2 + 2;
-
-            if (this.options[i].location === "right" || this.options[i].location === "left") {
-                $(hotspotNub).css("top", height);
-            } else if (this.options[i].location === "top" || this.options[i].location === "bottom") {
-                $(hotspotNub).css("left", width);
-            } else if (this.options[i].location === "bottom-left" || this.options[i].location === "top-left") {
-                $(hotspotNub).css("right", getWidth(this.options[i].id) / 2 - 14);
-            } else if (this.options[i].location === "bottom-right" || this.options[i].location === "top-right") {
-                $(hotspotNub).css("left", getWidth(this.options[i].id) / 2 - 14);
-            } else if (this.options[i].location === "right-top" || this.options[i].location === "left-top") {
-                $(hotspotNub).css("top", "7px");
-            } else if (this.options[i].location === "right-bottom" || this.options[i].location === "left-bottom") {
-                $(hotspotNub).css("bottom", "7px");
-            }
-
+            $hotspotHolder.append(rightHotspot);
 
             /**
              * The close button variable. That is shown in the top-right corner.
@@ -362,7 +313,7 @@ function Hotspot() {
             $(closeButton).attr("id", "closeHotspot");
             $(closeButton).text("x");
             $hotspotHolder.append(closeButton);
-			
+
             closeButton.addEventListener("click", function() {
                 $screenHolder.fadeOut();
                 $screenHolder.remove();
@@ -371,70 +322,84 @@ function Hotspot() {
             $(docFrag).append(screenHolder);
             $(document.body).append(docFrag);
 
-            if (this.options[i].background === "none") {
+            if (this.options[startingIndex].background === "none") {
                 $screenHolder.css("background", "none");
             }
 
             /**
              * If position ="relative" it places the hotspot next to the id passed in based on the "location".
              */
-            if (this.options[i].position === "relative") {
-                if (this.options[i].location === "bottom") {
-                    $("#hotspotHolder").css("left", getHotSpotLeft("center", this.options[i].id));
-                    $("#hotspotHolder").css("top", getHotSpotTop("bottom", this.options[i].id));
-                    $("#hotspotNub").attr("class", "top");
-                } else if (this.options[i].location === "left") {
-                    $("#hotspotHolder").css("left", getHotSpotLeft("left", this.options[i].id));
-                    $("#hotspotHolder").css("top", getHotSpotTop("left", this.options[i].id));
-                    $("#hotspotNub").attr("class", "right");
-                } else if (this.options[i].location === "right") {
-                    $("#hotspotHolder").css("left", getHotSpotLeft("right", this.options[i].id));
-                    $("#hotspotHolder").css("top", getHotSpotTop("right", this.options[i].id));
-                    $("#hotspotNub").attr("class", "left");
-                } else if (this.options[i].location === "bottom-right") {
-                    $("#hotspotHolder").css("top", getHotSpotTop("bottom", this.options[i].id));
-                    $("#hotspotHolder").css("left", getPositionLeft(this.options[i].id));
-                    $("#hotspotNub").attr("class", "top");
-                } else if (this.options[i].location === "bottom-left") {
-                    $("#hotspotHolder").css("top", getHotSpotTop("bottom", this.options[i].id));
-                    $("#hotspotHolder").css("left", getPositionLeft(this.options[i].id) - getWidth("hotspotHolder") + getWidth(this.options[i].id));
-                    $("#hotspotNub").attr("class", "top");
-                } else if (this.options[i].location === "top-left") {
-                    $("#hotspotHolder").css("top", getHotSpotTop("top", this.options[i].id)-10);
-                    $("#hotspotHolder").css("left", getPositionLeft(this.options[i].id) - getWidth("hotspotHolder") + getWidth(this.options[i].id));
-                    $("#hotspotNub").attr("class", "bottom");
-                } else if (this.options[i].location === "top-right") {
-                    $("#hotspotHolder").css("top", getHotSpotTop("top", this.options[i].id));
-                    $("#hotspotHolder").css("left", getPositionLeft(this.options[i].id));
-                    $("#hotspotNub").attr("class", "bottom");
-                } else if (this.options[i].location === "right-top") {
-                    $("#hotspotHolder").css("top", getPositionTop(this.options[i].id) - 10);
-                    $("#hotspotHolder").css("left", getHotSpotLeft("right", this.options[i].id));
-                    $("#hotspotNub").attr("class", "left");
-                } else if (this.options[i].location === "right-bottom") {
-                    $("#hotspotHolder").css("top", getPositionTop(this.options[i].id) - getHeight("hotspotHolder") + getHeight(this.options[i].id) + 10);
-                    $("#hotspotHolder").css("left", getHotSpotLeft("right", this.options[i].id));
-                    $("#hotspotNub").attr("class", "left");
-                } else if (this.options[i].location === "left-top") {
-                    $("#hotspotHolder").css("top", getPositionTop(this.options[i].id) - getHeight(this.options[i].id) / 2);
-                    $("#hotspotHolder").css("left", getHotSpotLeft("left", this.options[i].id));
-                    $("#hotspotNub").attr("class", "right");
-                } else if (this.options[i].location === "left-bottom") {
-                    $("#hotspotHolder").css("top", getPositionTop(this.options[i].id) - getHeight("hotspotHolder") + getHeight(this.options[i].id) + 10);
-                    $("#hotspotHolder").css("left", getHotSpotLeft("left", this.options[i].id));
-                    $("#hotspotNub").attr("class", "right");
-                } else {
-                    $("#hotspotHolder").css("left", getHotSpotLeft("center", this.options[i].id));
-                    $("#hotspotHolder").css("top", getHotSpotTop("top", this.options[i].id));
-                    $("#hotspotNub").attr("class", "bottom");
+            if (this.options[startingIndex].position === "relative") {
+                switch (this.options[startingIndex].location) {
+                    case ("bottom"):
+                        $("#hotspotHolder").css("left", getHotSpotLeft("center", this.options[startingIndex].id));
+                        $("#hotspotHolder").css("top", getHotSpotTop("bottom", this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "top");
+                        break;
+                    case ("left"):
+                        $("#hotspotHolder").css("left", getHotSpotLeft("left", this.options[startingIndex].id));
+                        $("#hotspotHolder").css("top", getHotSpotTop("left", this.options[startingIndex].id - 36));
+                        $("#hotspotNub").attr("class", "right");
+                        break;
+                    case ("right"):
+                        $("#hotspotHolder").css("left", getHotSpotLeft("right", this.options[startingIndex].id));
+                        $("#hotspotHolder").css("top", getHotSpotTop("right", this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "left");
+                        break;
+                    case ("bottom-right"):
+                        $("#hotspotHolder").css("top", getHotSpotTop("bottom", this.options[startingIndex].id));
+                        $("#hotspotHolder").css("left", getPositionLeft(this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "top");
+                        break;
+                    case ("bottom-left"):
+                        $("#hotspotHolder").css("top", getHotSpotTop("bottom", this.options[startingIndex].id));
+                        $("#hotspotHolder").css("left", getPositionLeft(this.options[startingIndex].id) - getWidth("hotspotHolder") + getWidth(this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "top");
+                        break;
+                    case ("top-left"):
+                        $("#hotspotHolder").css("top", getHotSpotTop("top", this.options[startingIndex].id) - 36);
+                        $("#hotspotHolder").css("left", getPositionLeft(this.options[startingIndex].id) - getWidth("hotspotHolder") + getWidth(this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "bottom");
+                        break;
+                    case ("top-right"):
+                        $("#hotspotHolder").css("top", getHotSpotTop("top", this.options[startingIndex].id) - 36);
+                        $("#hotspotHolder").css("left", getPositionLeft(this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "bottom");
+                        break;
+                    case ("right-bottom"):
+                        $("#hotspotHolder").css("top", getPositionTop(this.options[startingIndex].id) - 11);
+                        $("#hotspotHolder").css("left", getHotSpotLeft("right", this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "left");
+                        break;
+                    case ("right-top"):
+                        $("#hotspotHolder").css("top", getPositionTop(this.options[startingIndex].id) - getHeight("hotspotHolder") + getHeight(this.options[startingIndex].id) + 10);
+                        $("#hotspotHolder").css("left", getHotSpotLeft("right", this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "left");
+                        break;
+                    case ("left-bottom"):
+                        $("#hotspotHolder").css("top", getPositionTop(this.options[startingIndex].id) - getHeight(this.options[startingIndex].id) / 2);
+                        $("#hotspotHolder").css("left", getHotSpotLeft("left", this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "right");
+                        break;
+                    case ("left-top"):
+                        $("#hotspotHolder").css("top", getPositionTop(this.options[startingIndex].id) - getHeight("hotspotHolder")- (getHeight(this.options[startingIndex].id)/2));
+                        $("#hotspotHolder").css("left", getHotSpotLeft("left", this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "right");
+                        break;
+                    default:
+                        $("#hotspotHolder").css("left", getHotSpotLeft("center", this.options[startingIndex].id));
+                        $("#hotspotHolder").css("top", getHotSpotTop("top", this.options[startingIndex].id));
+                        $("#hotspotNub").attr("class", "bottom");
+                        break;
                 }
 
-                if (getPositionTop(this.options[i].id) > window.innerHeight || getPositionTop(this.options[i].id) < window.innerHeight) {
+
+                if (getPositionTop(this.options[startingIndex].id) > window.innerHeight + $(window).scrollTop() || getPositionTop(this.options[startingIndex].id) < $(window).scrollTop()) {
                     $("html, body").animate({
-                        scrollTop: getPositionTop('hotspotHolder')-50
-                    }, 500);
+                        scrollTop: getPositionTop('hotspotHolder') - 50
+                    }, 2000);
                 }
-                $("#" + this.options[i].id).css("z-index", "999");
+                $("#" + this.options[startingIndex].id).css("z-index", "999");
             }
 
             var dotMenuHolder = document.createElement('div');
@@ -444,18 +409,111 @@ function Hotspot() {
             var unorderedList = document.createElement('ul');
             $(dotMenuHolder).append(unorderedList);
 
-            for (var j = 0; j < length; j++) {
-                var listItem = document.createElement('li');
-                $(unorderedList).append(listItem);
-                $(listItem).attr("id", j);
-                if (j === i) {
-                    $(listItem).addClass('current');
+            for (var i = 0; i < length; i++) {
+                if ($('#' + options[i].id).length != 0 || options[i].id == "none") {
+                    var listItem = document.createElement('li');
+                    $(unorderedList).append(listItem);
+                    $(listItem).attr("id", i);
+                    if (i === startingIndex) {
+                        $(listItem).addClass('current');
+                    }
+                    listItem.addEventListener("click", function(event) {
+                        $("#" + id).css("z-index", "0");
+                        $screenHolder.remove();
+                        next.init(options, parseInt(event.target.id), myCallback);
+                    });
                 }
-                listItem.addEventListener("click", function(event) {
-                    $("#" + id).css("z-index", "0");
-                    $screenHolder.remove();
-                    next.init(options, myCallback, parseInt(event.target.id));
-                });
+            }
+
+            if (this.options[startingIndex].type === "question") {
+                if(this.options[startingIndex].questionId === "1"){
+                    rightHotspot.addEventListener('click', function() {
+                        if (answer === "no") {
+                            var myNotification = new Notification({
+                                background: "transparent",
+                                fontColor: "blue",
+                                id: "mindset",
+                                choice: "fadeDown",
+                                message: "<img src='downarrowicon.png' width='35px' height='40px'/>"
+                            });
+                            myNotification.open();
+
+                            var myNotification1 = new Notification({
+                                background: "transparent",
+                                fontColor: "red",
+                                id: "habits",
+                                choice: "fadeDown",
+                                message: "<img src='downarrowicon.png' width='35px' height='40px'/>"
+                            });
+                            myNotification1.open();
+
+                            var myNotification1 = new Notification({
+                                background: "transparent",
+                                fontColor: "red",
+                                id: "knowledge",
+                                choice: "fadeUp",
+                                message: "<img src='uparrowicon.png' width='45px' height='50px'/>"
+                            });
+                            myNotification1.open();
+                        } else {
+                            var myNotification = new Notification({
+                                id: "new",
+                                choice: "advancedAlert",
+                                type: "goal",
+                                number: '1',
+                                message: "You unlocked a new goal!",
+                                background: "#39aba3",
+                                fontColor: "white"
+                            });
+                            myNotification.open();
+                            var myNotification = new Notification({
+                                id: "new2",
+                                choice: "advancedAlert",
+                                type: "badge",
+                                number: '2',
+                                message: "You unlocked a new goal!",
+                                background: "#39aba3",
+                                fontColor: "white"
+                            });
+                            myNotification.open();
+                        }
+                    });
+                }
+            }
+
+            /**
+             * Puts the "nub" in the center of the hotspot
+             */
+            var startHeight = getHeight('hotspotHolder');
+            var height = startHeight / 2 + 4;
+            var startWidth = getWidth('hotspotHolder');
+            var width = startWidth / 2 + 2;
+
+            switch (this.options[startingIndex].location) {
+                case "right":
+                case "left":
+                    $(hotspotNub).css("top", height);
+                    break;
+                case "top":
+                case "bottom":
+                    $(hotspotNub).css("left", width);
+                    break;
+                case "bottom-left":
+                case "top-left":
+                    $(hotspotNub).css("right", getWidth(this.options[startingIndex].id) / 2 - 14);
+                    break;
+                case "bottom-right":
+                case "top-right":
+                    $(hotspotNub).css("left", getWidth(this.options[startingIndex].id) / 2 - 14);
+                    break;
+                case "right-bottom":
+                case "left-bottom":
+                    $(hotspotNub).css("top", "7px");
+                    break;
+                case "right-top":
+                case "left-top":
+                    $(hotspotNub).css("bottom", "7px");
+                    break;
             }
         }
     }

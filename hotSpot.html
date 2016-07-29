@@ -1,0 +1,19 @@
+<html>
+<head>
+<link href="hotspotStyle.css" type="text/css" rel="stylesheet">
+<link href="mobile-stylesheet.css" type="text/css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+</head>
+<body>
+<button id="test" style="position: relative;">Start Tutorial</button>
+<button id="test2" style="position: relative; top:500px; left: 50%;">Next Thing</button>
+<button id="test3"  style="position: absolute; top:1500px; left: 70%;">Bottom Thing</button>
+
+<script src="hotSpotScript.js"></script>
+<script>
+	var hotspot = new Hotspot();
+	hotspot.init(options, 0, myCallback);
+</script>
+</body>
+</html>
